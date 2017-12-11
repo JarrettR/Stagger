@@ -3,11 +3,12 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 from matplotlib.patches import Circle, Wedge, Polygon
 from matplotlib.collections import PatchCollection
+import fractions
 
 drive1 = { 'x': -20, 'y': -20, 'r': 10, 'speed': 50, 'initial': 0 }
-drive2 = { 'x': 15, 'y': -22, 'r': 8, 'speed': -10, 'initial': 180 }
+drive2 = { 'x': 15, 'y': -22, 'r': 8, 'speed': 20, 'initial': 180 }
 bar1 = { 'length': 35, 'joint': 30 }
-bar2 = { 'length': 23.3 }
+bar2 = { 'length': 40 }
 
 fig = plt.figure(figsize=(6, 6))
 ax = plt.axes(xlim=(-50, 50), ylim=(-50, 50))
@@ -15,18 +16,40 @@ line1, = ax.plot([], [], 'b-', lw=8)
 line2, = ax.plot([], [], 'g-', lw=8)
 endLine, = ax.plot([], [], 'b:', lw=5)
 
+def lcm(a,b): return abs(a * b) / fractions.gcd(a,b) if a and b else 0
 
 #speed
-if np.abs(drive1['speed']) > np.abs(drive2['speed']):
+animate = { }
+if drive1['speed'] == 0:
+    animate['frames'] = 360 / np.abs(drive2['speed'])
+    animate['delay'] = 100 / np.abs(drive2['speed'])
+elif drive2['speed'] == 0:
+    animate['frames'] = 360 / np.abs(drive1['speed'])
+    animate['delay'] = 100 / np.abs(drive1['speed'])
+elif np.abs(drive1['speed']) > np.abs(drive2['speed']):
+    lcm = lcm(np.abs(drive1['speed']), np.abs(drive2['speed']))
+    print(lcm)
+    animate['frames'] = int(lcm)
+    lowest = lcm / np.abs(drive2['speed'])
+    animate['frames'] = int(lowest) * 360
+    
+    drive2['interval'] = 360 * lowest * drive2['speed']
+    print(drive2['interval'])
+    #drive2['interval'] = (lcm / drive1['speed']) / 360
+    
+    drive1['interval'] = drive1['speed']
+    
+    animate['delay'] = 100 # / np.abs(drive2['speed'])
+    #animate = { 'delay': 100 / np.abs(drive2['speed']), 'frames':  np.abs(drive2['speed'])}
     speed2 = 1
     speed1 = np.abs(drive1['speed'] / drive2['speed'])
-    interval = 100 / np.abs(drive2['speed'])
 else:
+    lcm = lcm(np.abs(drive1['speed']), np.abs(drive2['speed']))
+    print(lcm)
+    animate = { 'delay': 100 / np.abs(drive1['speed']), 'frames':  np.abs(drive1['speed'])}
     speed1 = 1
     speed2 = np.abs(drive2['speed'] / drive1['speed'])
-    interval = 100 / np.abs(drive1['speed'])
 
-#calc total period
 
 
     
@@ -108,10 +131,10 @@ def init():
     return line1, line2, patchBar1Base, patchBar2Base, patchJoint, patchJointArc, patchBar2Arc, patchBar2End,
 
     
-def animate(i):
+def animateFrame(i):
 
     #drive 1
-    Drive1X, Drive1Y = base_point(drive1, i)
+    Drive1X, Drive1Y = base_point(drive1, i * drive1['interval'])
     
     Drive1X = Drive1X + drive1['x']
     Drive1Y = Drive1Y + drive1['y']
@@ -120,7 +143,7 @@ def animate(i):
     patchJointArc.center = (Drive1X, Drive1Y)
     
     #drive 2
-    x1, y1 = base_point(drive2, i)
+    x1, y1 = base_point(drive2, i * drive2['interval'])
     
     x1 = x1 + drive2['x']
     y1 = y1 + drive2['y']
@@ -142,22 +165,22 @@ def animate(i):
     x2, y2 = line_end(x1, y1, bar2['length'], (np.pi - angle) + driveAngle)
     line2.set_data([x1, x2], [y1, y2])
     
-    print(i)
     return line1, line2, patchBar1Base, patchBar2Base, patchJoint, patchJointArc, patchBar2Arc, patchBar2End,
 
     
-anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=360, interval=interval, blit=True)
+anim = animation.FuncAnimation(fig, animateFrame, init_func=init,
+                               frames=animate['frames'], interval=animate['delay'], blit=True)
 
                                
                                
 if (distance_between(drive1, drive2)[0] + drive1['r'] + drive2['r']) >= (bar1['joint'] + bar2['length']):
-    raise NameError('Check your sizes!')
+    raise NameError('Bars too short!')
+if ((distance_between(drive1, drive2)[0] - drive1['r']) + bar1['joint']) < (bar2['length']):
+    raise NameError('Bars too long!')
     
 
 last = end_path(drive1, drive2, bar1, bar2, 0)
 for i in range(360):
-    print(last)
     next = end_path(drive1, drive2, bar1, bar2, i)
     if i > 0:
         plt.plot([last[0], next[0]], [last[1], next[1]], 'k-')
