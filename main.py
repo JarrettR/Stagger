@@ -5,8 +5,8 @@ from matplotlib.patches import Circle, Wedge, Polygon
 from matplotlib.collections import PatchCollection
 import fractions
 
-drive1 = { 'x': -20, 'y': -20, 'r': 10, 'speed': 50, 'initial': 0 }
-drive2 = { 'x': 15, 'y': -22, 'r': 8, 'speed': 20, 'initial': 180 }
+drive1 = { 'x': -20, 'y': -20, 'r': 10, 'speed': 10, 'initial': 50 }
+drive2 = { 'x': 15, 'y': -22, 'r': 8, 'speed': 10, 'initial': 180 }
 bar1 = { 'length': 35, 'joint': 30 }
 bar2 = { 'length': 40 }
 
@@ -134,7 +134,7 @@ def init():
 def animateFrame(i):
 
     #drive 1
-    Drive1X, Drive1Y = base_point(drive1, i * drive1['interval'])
+    Drive1X, Drive1Y = base_point(drive1,)
     
     Drive1X = Drive1X + drive1['x']
     Drive1Y = Drive1Y + drive1['y']
@@ -143,7 +143,7 @@ def animateFrame(i):
     patchJointArc.center = (Drive1X, Drive1Y)
     
     #drive 2
-    x1, y1 = base_point(drive2, i * drive2['interval'])
+    x1, y1 = base_point(drive2, i)
     
     x1 = x1 + drive2['x']
     y1 = y1 + drive2['y']
