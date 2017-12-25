@@ -1,5 +1,5 @@
 
-class bar(object):
+class Bar(object):
 
-    def init(self, length, joint = 0):
+    def __init__(self, length, joint = 0):
         self.bar = { 'length': length, 'joint': joint }
