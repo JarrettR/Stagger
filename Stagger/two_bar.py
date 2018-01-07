@@ -24,43 +24,38 @@ class Two_Bar(object):
         self.animationSpeed = self.lcm(drive1['speed'],drive2['speed'])
         
         
-    def lcm(a,b): return abs(a * b) / fractions.gcd(a,b) if a and b else 0
+    def lcm(self, a,b): return abs(a * b) / fractions.gcd(a,b) if a and b else 0
 
-    def cosine_law(A, B, C):
+    def cosine_law(self, A, B, C):
         out = np.arccos((A * A + B * B - C * C)/(2.0 * A * B))
         return out
         
-    def line_end(X, Y, R, T):
+    def line_end(self, X, Y, R, T):
         x = X + np.cos(T) * R
         y = Y + np.sin(T) * R
         return x, y
         
         
-    def distance_between(obj1, obj2):
-        theta = np.arctan((obj1['y'] - obj2['y']) / (obj1['x'] - obj2['x']))
-        distance = np.sqrt((obj2['x'] - obj1['x'])**2 + (obj2['y'] - obj1['y'])**2)
         
-        return distance, theta
-        
-    def end_path(drive1, drive2, bar1, bar2, i):
+    def end_path(self, drive1, drive2, bar1, bar2, i):
         #drive 1
-        Drive1X, Drive1Y = base_point(drive1, i)
+        Drive1X, Drive1Y = drive1.base_point(i)
         
-        Drive1X = Drive1X + drive1['x']
-        Drive1Y = Drive1Y + drive1['y']
+        Drive1X = Drive1X + drive1.x
+        Drive1Y = Drive1Y + drive1.y
 
         #drive 2
-        Drive2X, Drive2Y = base_point(drive2, i)
+        Drive2X, Drive2Y = drive2.base_point(i)
         
-        Drive2X = Drive2X + drive2['x']
-        Drive2Y = Drive2Y + drive2['y']
+        Drive2X = Drive2X + drive2.x
+        Drive2Y = Drive2Y + drive2.y
 
         driveAngle = np.arctan((Drive1Y - Drive2Y) / (Drive1X - Drive2X))
         
         driveLengthR = np.sqrt((Drive2X - Drive1X)**2 + (Drive2Y - Drive1Y)**2)
-        angle = cosine_law(bar1['joint'], driveLengthR, bar2['length'])
+        angle = self.cosine_law(self, bar1['joint'], driveLengthR, bar2['length'])
         
-        return line_end(Drive1X, Drive1Y, bar1['length'], angle + driveAngle)
+        return self.line_end(self, Drive1X, Drive1Y, drive1.r, angle + driveAngle)
 
     def define_speed(self):
         if drive1['speed'] == 0:
@@ -93,13 +88,3 @@ class Two_Bar(object):
             speed1 = 1
             speed2 = np.abs(drive2['speed'] / drive1['speed'])
     
-'''
-last = end_path(drive1, drive2, bar1, bar2, 0)
-for i in range(360):
-    next = end_path(drive1, drive2, bar1, bar2, i)
-    if i > 0:
-        plt.plot([last[0], next[0]], [last[1], next[1]], 'k-')
-    last = next
-
-plt.show()
-'''

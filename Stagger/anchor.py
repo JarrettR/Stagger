@@ -15,4 +15,12 @@ class Anchor(object):
             angle = self.initial - angle
         else:
             angle = self.initial + angle
-        return self.r * np.cos(np.deg2rad(angle)), self.r * np.sin(np.deg2rad(angle))
+        x = self.r * np.cos(np.deg2rad(angle)) + self.x
+        y = self.r * np.sin(np.deg2rad(angle)) + self.y
+        return x, y
+        
+    def distance_from(self, x, y):
+        theta = np.arctan((self.y - y) / (self.x - x))
+        distance = np.sqrt((x - self.x)**2 + (y - self.y)**2)
+        
+        return distance, theta

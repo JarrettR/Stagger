@@ -9,8 +9,8 @@ import stagger
 bar1 = { 'length': 35, 'joint': 30 }
 bar2 = { 'length': 40 }
 
-drive1 = stagger.Anchor(20, -20, 10, 50, 50)
-drive2 = stagger.Anchor(15, -22, 8, 20, 180)
+drive1 = stagger.Anchor(-20, -20, 10, 50, 50)
+drive2 = stagger.Anchor(15, -22, 6, 20, 180)
 
 fig = plt.figure(figsize=(6, 6))
 ax = plt.axes(xlim=(-50, 50), ylim=(-50, 50))
@@ -58,25 +58,17 @@ def animateFrame(i):
 
     #drive 1
     Drive1X, Drive1Y = drive1.base_point(i)
-    
-    Drive1X = Drive1X + drive1.x
-    Drive1Y = Drive1Y + drive1.y
-    
+
     patchBar1Base.center = (Drive1X, Drive1Y)
     patchJointArc.center = (Drive1X, Drive1Y)
     
     #drive 2
     x1, y1 = drive2.base_point(i)
-    
-    x1 = x1 + drive2.x
-    y1 = y1 + drive2.y
-    
+
     patchBar2Base.center = (x1, y1)
     patchBar2Arc.center = (x1, y1)
-    driveLengthR, driveAngle = stagger.Two_Bar.distance_between({ 'x':Drive1X, 'y': Drive1Y }, { 'x': x1, 'y':y1 })
-    #driveAngle = np.arctan((Drive1Y - y1) / (Drive1X - x1))
+    driveLengthR, driveAngle = drive1.distance_from(x1, y1)
     
-    #driveLengthR = np.sqrt((x1 - Drive1X)**2 + (y1 - Drive1Y)**2)
     angle = stagger.Two_Bar.cosine_law(bar1['joint'], driveLengthR, bar2['length'])
     x2, y2 = stagger.Two_Bar.line_end(Drive1X, Drive1Y, bar1['length'], angle + driveAngle)
     
@@ -90,16 +82,16 @@ def animateFrame(i):
     
     return line1, line2, patchBar1Base, patchBar2Base, patchJoint, patchJointArc, patchBar2Arc, patchBar2End,
     
-#anim = animation.FuncAnimation(fig, animateFrame, init_func=init,
-#                               frames=80, interval=50, blit=True)
+anim = animation.FuncAnimation(fig, animateFrame, init_func=init,
+                               frames=360, interval=50, blit=True)
                                
 
-'''
-last = end_path(drive1, drive2, bar1, bar2, 0)
+
+last = stagger.Two_Bar.end_path(stagger.Two_Bar, drive1, drive2, bar1, bar2, 0)
 for i in range(360):
-    next = end_path(drive1, drive2, bar1, bar2, i)
+    next = stagger.Two_Bar.end_path(stagger.Two_Bar, drive1, drive2, bar1, bar2, i)
     if i > 0:
         plt.plot([last[0], next[0]], [last[1], next[1]], 'k-')
     last = next
-'''
+
 plt.show()
