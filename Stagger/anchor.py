@@ -10,6 +10,10 @@ class Anchor(object):
         self.speed = speed
         self.initial = initial
         
+    @property
+    def xy(self):
+        return (self.x, self.y)
+        
     def base_point(self, angle):
         if self.speed < 0:
             angle = self.initial - angle
