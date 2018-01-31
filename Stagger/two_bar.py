@@ -15,47 +15,41 @@ class Two_Bar(object):
         self.bar1 = bar1
         self.bar2 = bar2
     
-        if (drive1.distance_from(drive2.x, drive2.y)[0] + drive1.r + drive2.r) >= (bar1.joint + bar2.length):
+        if (drive1.distance_angle_from(drive2.x, drive2.y)[0] + drive1.r + drive2.r) >= (bar1.joint + bar2.length):
             raise NameError('Bars too short!')
-        if ((drive1.distance_from(drive2.x, drive2.y)[0] - drive1.r) + bar1.joint) < (bar2.length):
+        if ((drive1.distance_angle_from(drive2.x, drive2.y)[0] - drive1.r) + bar1.joint) < (bar2.length):
             raise NameError('Bars too long!')
         
         #identify speeds
         self.animationSpeed = self.lcm(drive1.speed, drive2.speed)
         
         
-    def lcm(a,b): return abs(a * b) / fractions.gcd(a,b) if a and b else 0
+    def lcm(self, a,b): return abs(a * b) / fractions.gcd(a,b) if a and b else 0
 
-    def cosine_law(A, B, C):
+    def sides_to_angle(self, A, B, C):
+        #cosine law
         out = np.arccos((A * A + B * B - C * C)/(2.0 * A * B))
         return out
         
-    def line_end(X, Y, R, T):
-        x = X + np.cos(T) * R
-        y = Y + np.sin(T) * R
+    def line_end(self, x, y, r, angle):
+        x = x + np.cos(angle) * r
+        y = y + np.sin(angle) * r
         return x, y
         
-        
-        
-    def end_path(self, drive1, drive2, bar1, bar2, i):
+    def end_path(self, i):
         #drive 1
-        Drive1X, Drive1Y = drive1.base_point(i)
+        drive1X, drive1Y = self.drive1.base_point(i)
         
-        Drive1X = Drive1X + drive1.x
-        Drive1Y = Drive1Y + drive1.y
-
         #drive 2
-        Drive2X, Drive2Y = drive2.base_point(i)
+        drive2X, drive2Y = self.drive2.base_point(i)
         
-        Drive2X = Drive2X + drive2.x
-        Drive2Y = Drive2Y + drive2.y
-
-        driveAngle = np.arctan((Drive1Y - Drive2Y) / (Drive1X - Drive2X))
+        driveLengthR, driveAngle = self.drive1.base_point_distance(i, self.drive2)
         
-        driveLengthR = np.sqrt((Drive2X - Drive1X)**2 + (Drive2Y - Drive1Y)**2)
-        angle = self.cosine_law(bar1.joint, driveLengthR, bar2.length)
+        angle = self.sides_to_angle(self.bar1.joint, driveLengthR, self.bar2.length)
         
-        return self.line_end(Drive1X, Drive1Y, drive1.r, angle + driveAngle)
+        barEnd = self.line_end(drive1X, drive1Y, self.bar1.length, angle + driveAngle)
+        
+        return barEnd
 
     def define_speed(self):
         if drive1.speed == 0:

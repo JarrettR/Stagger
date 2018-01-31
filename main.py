@@ -15,6 +15,8 @@ class GraphAnimation(object):
         #(x, y, r, speed = 1, initial = 0)
         self.drive1 = stagger.Anchor(-20, -20, 10, 50, 50)
         self.drive2 = stagger.Anchor(15, -22, 6, 20, 180)
+        
+        self.motionSystem = stagger.Two_Bar(self.drive1, self.drive2, self.bar1, self.bar2)
 
         #xlim, ylim, line1 style, weight, line2 style, weight
         self.init_graph((-50, 50), (-50, 50), 'b-', 8, 'g-', 8)
@@ -38,11 +40,10 @@ class GraphAnimation(object):
                                frames=360, interval=50, blit=True)
                                
 
-
-        #end_path(self.drive1, self.drive2, self.bar1, self.bar2, i)
-        last = stagger.Two_Bar.end_path(stagger.Two_Bar, self.drive1, self.drive2, self.bar1, self.bar2, 0)
+        #Display drawn path to be output
+        last = self.motionSystem.end_path(0)
         for i in range(360):
-            next = stagger.Two_Bar.end_path(stagger.Two_Bar, self.drive1, self.drive2, self.bar1, self.bar2, i)
+            next = self.motionSystem.end_path(i)
             if i > 0:
                 plt.plot([last[0], next[0]], [last[1], next[1]], 'k-')
             last = next
@@ -86,28 +87,29 @@ class GraphAnimation(object):
     def animate_frame(self, i):
 
         #drive 1
-        self.drive1X, self.drive1Y = self.drive1.base_point(i)
+        drive1X, drive1Y = self.drive1.base_point(i)
 
-        self.patchbar1Base.center = (self.drive1X, self.drive1Y)
-        self.patchJointArc.center = (self.drive1X, self.drive1Y)
+        self.patchbar1Base.center = (drive1X, drive1Y)
+        self.patchJointArc.center = (drive1X, drive1Y)
         
         #drive 2
-        x1, y1 = self.drive2.base_point(i)
+        drive2X, drive2Y = self.drive2.base_point(i)
 
-        self.patchbar2Base.center = (x1, y1)
-        self.patchbar2Arc.center = (x1, y1)
-        driveLengthR, driveAngle = self.drive1.distance_from(x1, y1)
+        self.patchbar2Base.center = (drive2X, drive2Y)
+        self.patchbar2Arc.center = (drive2X, drive2Y)
         
-        angle = stagger.Two_Bar.cosine_law(self.bar1.joint, driveLengthR, self.bar2.length)
-        x2, y2 = stagger.Two_Bar.line_end(self.drive1X, self.drive1Y, self.bar1.length, angle + driveAngle)
+        driveLengthR, driveAngle = self.drive1.base_point_distance(i, self.drive2)
         
-        self.line1.set_data([self.drive1X, x2], [self.drive1Y, y2])
-        self.patchJoint.center = stagger.Two_Bar.line_end(self.drive1X, self.drive1Y, self.bar1.joint, angle + driveAngle)
+        angle = self.motionSystem.sides_to_angle(self.bar1.joint, driveLengthR, self.bar2.length)
+        x2, y2 = self.motionSystem.line_end(drive1X, drive1Y, self.bar1.length, angle + driveAngle)
+        
+        self.line1.set_data([drive1X, x2], [drive1Y, y2])
+        self.patchJoint.center = self.motionSystem.line_end(drive1X, drive1Y, self.bar1.joint, angle + driveAngle)
         self.patchbar2End.center = (x2, y2)
         
-        angle = stagger.Two_Bar.cosine_law(self.bar2.length, driveLengthR, self.bar1.joint)
-        x2, y2 = stagger.Two_Bar.line_end(x1, y1, self.bar2.length, (np.pi - angle) + driveAngle)
-        self.line2.set_data([x1, x2], [y1, y2])
+        angle = self.motionSystem.sides_to_angle(self.bar2.length, driveLengthR, self.bar1.joint)
+        x2, y2 = self.motionSystem.line_end(drive2X, drive2Y, self.bar2.length, (np.pi - angle) + driveAngle)
+        self.line2.set_data([drive2X, x2], [drive2Y, y2])
         
         return self.line1, self.line2, self.patchbar1Base, self.patchbar2Base, self.patchJoint, self.patchJointArc, self.patchbar2Arc, self.patchbar2End,
         

@@ -14,17 +14,45 @@ class Anchor(object):
     def xy(self):
         return (self.x, self.y)
         
+        
     def base_point(self, angle):
         if self.speed < 0:
             angle = self.initial - angle
         else:
             angle = self.initial + angle
-        x = self.r * np.cos(np.deg2rad(angle)) + self.x
-        y = self.r * np.sin(np.deg2rad(angle)) + self.y
+        x = (self.r * self.deg_to_x(angle)) + self.x
+        y = (self.r * self.deg_to_y(angle)) + self.y
+        #print(x, y, self.r, angle, self.x, self.y)
+        
         return x, y
         
-    def distance_from(self, x, y):
-        theta = np.arctan((self.y - y) / (self.x - x))
-        distance = np.sqrt((x - self.x)**2 + (y - self.y)**2)
+    def distance_angle_from(self, x, y):
+        theta = self.xy_to_angle((self.x - x), (self.y - y))
+        distance = self.xy_to_hyp((x - self.x), (y - self.y))
         
         return distance, theta
+        
+    def base_point_distance(self, angle, end):
+        startPoint = self.base_point(angle)
+        endPoint = end.base_point(angle)
+        
+        x = startPoint[0] - endPoint[0]
+        y = startPoint[1] - endPoint[1]
+        
+        theta = self.xy_to_angle(x, y)
+        distance = self.xy_to_hyp(x, y)
+        
+        return distance, theta
+        
+        
+    def deg_to_x(self, angle):
+        return np.cos(np.deg2rad(angle))
+        
+    def deg_to_y(self, angle):
+        return np.sin(np.deg2rad(angle))
+        
+    def xy_to_angle(self, x, y):
+        return np.arctan(y / x)
+        
+    def xy_to_hyp(self, x, y):
+        return np.sqrt((x)**2 + (y)**2)
