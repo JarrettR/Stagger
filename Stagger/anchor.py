@@ -32,9 +32,9 @@ class Anchor(object):
         
         return distance, theta
         
-    def base_point_distance(self, angle, end):
-        startPoint = self.base_point(angle)
-        endPoint = end.base_point(angle)
+    def base_point_distance(self, angle1, angle2, end):
+        startPoint = self.base_point(angle1)
+        endPoint = end.base_point(angle2)
         
         x = startPoint[0] - endPoint[0]
         y = startPoint[1] - endPoint[1]

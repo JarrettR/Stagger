@@ -14,6 +14,12 @@ class Two_Bar(object):
         self.drive2 = drive2
         self.bar1 = bar1
         self.bar2 = bar2
+        
+        lcm = self.lcm(drive1.speed, drive2.speed)
+        print(drive1.speed, drive2.speed, lcm)
+        
+        self.totalFrames = int(lcm * 360)
+        self.stepSize = 1 / lcm
     
         if (drive1.distance_angle_from(drive2.x, drive2.y)[0] + drive1.r + drive2.r) >= (bar1.joint + bar2.length):
             raise NameError('Bars too short!')
@@ -36,14 +42,16 @@ class Two_Bar(object):
         y = y + np.sin(angle) * r
         return x, y
         
-    def end_path(self, i):
+    def end_path(self, i):        
         #drive 1
-        drive1X, drive1Y = self.drive1.base_point(i)
+        angle1 = i * self.drive1.speed
+        drive1X, drive1Y = self.drive1.base_point(angle1)
         
         #drive 2
-        drive2X, drive2Y = self.drive2.base_point(i)
+        angle2 = i * self.drive2.speed
+        drive2X, drive2Y = self.drive2.base_point(angle2)
         
-        driveLengthR, driveAngle = self.drive1.base_point_distance(i, self.drive2)
+        driveLengthR, driveAngle = self.drive1.base_point_distance(angle1, angle2, self.drive2)
         
         angle = self.sides_to_angle(self.bar1.joint, driveLengthR, self.bar2.length)
         
