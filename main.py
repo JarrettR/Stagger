@@ -13,8 +13,8 @@ class GraphAnimation(object):
         self.bar2 = stagger.Bar(40)
 
         #(x, y, r, speed = 1, initial = 0)
-        self.drive1 = stagger.Anchor(-20, -20, 10, 16, 0)
-        self.drive2 = stagger.Anchor(15, -22, 6, 16, 180)
+        self.drive1 = stagger.Anchor(-20, -20, 10, 6, 0)
+        self.drive2 = stagger.Anchor(15, -22, 6, 3, 180)
         
         self.motionSystem = stagger.Two_Bar(self.drive1, self.drive2, self.bar1, self.bar2)
 
@@ -37,7 +37,7 @@ class GraphAnimation(object):
         
         #Begin animation
         anim = animation.FuncAnimation(self.fig, self.animate_frame, init_func=self.init_animation,
-                               frames=self.motionSystem.totalFrames, interval=1, blit=True)
+                               frames=self.motionSystem.totalFrames, interval=10, blit=True)
                                
 
         #Display drawn path to be output
