@@ -22,7 +22,6 @@ class Anchor(object):
             angle = self.initial + angle
         x = (self.r * self.deg_to_x(angle)) + self.x
         y = (self.r * self.deg_to_y(angle)) + self.y
-        #print(x, y, self.r, angle, self.x, self.y)
         
         return x, y
         

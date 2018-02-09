@@ -3,8 +3,6 @@
 from .context import stagger
 
 import unittest
-import math
-
 
 class StaggerTestSuite(unittest.TestCase):
     """Stagger test cases."""
@@ -94,9 +92,6 @@ class StaggerTestSuite(unittest.TestCase):
         
         motionSystem = stagger.Two_Bar(drive1, drive2, bar1, bar2)
         
-        #self.motionSystem.totalFrames = 5
-        #self.motionSystem.stepSize = 1
-
         return motionSystem
         
 
