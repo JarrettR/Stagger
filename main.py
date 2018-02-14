@@ -2,14 +2,16 @@
 
 import stagger
 import pickle
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 from functools import partial
 
 class GeneratePaths(object):
     def __init__(self):
         system = self.create_system()
-        self.save_binary('test.pickle', system)
-        data = self.load_binary('test.pickle')
+        self.save_binary('outputs\test.pickle', system)
+        data = self.load_binary('outputs\test.pickle')
+        self.save_database('outputs\test.db', data)
+        data = self.load_database('outputs\test.db')
         self.save_png('test.png', data, 50)
     
     
@@ -38,6 +40,15 @@ class GeneratePaths(object):
             data = pickle.load(f)
         return data
 
+    def save_database(self, filename, data):
+        self.db = stagger.Database
+
+
+    def load_database(self, filename):
+        with open(filename, 'rb') as f:
+            data = pickle.load(f)
+        return data
+
     def save_png(self, filename, data, scaling):
         data, boundingBox = self.reposition(data, scaling)
         
@@ -46,10 +57,16 @@ class GeneratePaths(object):
         draw = ImageDraw.Draw(im)
         
         for i in range(len(data) - 1):
-            draw.line(data[i] + data[i + 1], fill=128)
+            draw.line(data[i] + data[i + 1], fill=128, width=5)
         del draw
+        
+        #Image origin is top left, convert to CAD-style bottom left
+        im = ImageOps.flip(im)
 
         im.save(filename, "PNG")
+
+    def flip_y_axis(self, data, height):
+        return (data[0], height - data[1])
 
     def reposition(self, data, scaling = 1):
         '''Returns data, boundingBox'''
