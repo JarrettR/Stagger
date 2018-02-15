@@ -8,11 +8,12 @@ from functools import partial
 class GeneratePaths(object):
     def __init__(self):
         system = self.create_system()
-        self.save_binary('outputs\test.pickle', system)
-        data = self.load_binary('outputs\test.pickle')
-        self.save_database('outputs\test.db', data)
-        data = self.load_database('outputs\test.db')
-        self.save_png('test.png', data, 50)
+        self.save_binary('outputs/test.pickle', system)
+        data = self.load_binary('outputs/test.pickle')
+        self.create_database('outputs/test.db')
+        self.save_database(self.motionSystem, data)
+        #data = self.load_database('outputs/test.db')
+        self.save_png('outputs/test.png', data, 50)
     
     
     def create_system(self):
@@ -40,8 +41,14 @@ class GeneratePaths(object):
             data = pickle.load(f)
         return data
 
-    def save_database(self, filename, data):
-        self.db = stagger.Database
+    def create_database(self, filename):
+        self.db = stagger.Database(filename)
+        self.db.create_default_tables()
+        
+    def save_database(self, study, data):
+        id = self.db.insert_study('Motion Study Name')
+        self.db.insert_parameters(id, 'Parameter Set Name', study)
+        self.db.insert_endpoints(id, data)
 
 
     def load_database(self, filename):

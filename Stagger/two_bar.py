@@ -73,3 +73,8 @@ class Two_Bar(object):
         barEnd = self.line_end(drive1X, drive1Y, self.bar1.length, angle + driveAngle)
         
         return barEnd
+
+    @property
+    def parameters(self):
+  
+        return (self.bar1.length, self.bar1.joint, self.bar2.length, self.drive1.x, self.drive1.y, self.drive1.r, self.drive1.speed, self.drive1.initial, self.drive2.x, self.drive2.y, self.drive2.r, self.drive2.speed, self.drive2.initial)
