@@ -19,9 +19,9 @@ class Two_Bar(object):
         self.set_speeds()
     
         if (drive1.distance_angle_from(drive2.x, drive2.y)[0] + drive1.r + drive2.r) >= (bar1.joint + bar2.length):
-            raise NameError('Bars too short!')
+            raise ValueError('Bars too short!')
         if ((drive1.distance_angle_from(drive2.x, drive2.y)[0] - drive1.r) + bar1.joint) < (bar2.length):
-            raise NameError('Bars too long!')
+            raise ValueError('Bars too long!')
    
     def set_speeds(self):
     

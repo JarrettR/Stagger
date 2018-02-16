@@ -141,5 +141,4 @@ $RECYCLE.BIN/
 # Project specific
 *.csv
 *.db
-*.png
 *.pickle

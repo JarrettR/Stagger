@@ -7,22 +7,27 @@ from functools import partial
 
 class GeneratePaths(object):
     def __init__(self):
-        system = self.create_system()
-        self.save_binary('outputs/test.pickle', system)
-        data = self.load_binary('outputs/test.pickle')
+        #self.save_binary('outputs/test.pickle', system)
+        #data = self.load_binary('outputs/test.pickle')
         self.create_database('outputs/test.db')
-        self.save_database(self.motionSystem, data)
-        #data = self.load_database('outputs/test.db')
-        self.save_png('outputs/test.png', data, 50)
+        
+        for y in range(40):
+            try:
+                system = self.create_system(y - 20)
+                self.save_database(self.motionSystem, system)
+                #data = self.load_database('outputs/test.db')
+                self.save_png('outputs/test{}.png'.format(x), system, 50)
+            except (ValueError, ZeroDivisionError) as e:
+                print('Could not calculate {}: {}'.format(x, e))
     
     
-    def create_system(self):
+    def create_system(self, y):
         #(length, joint = 0)
         self.bar1 = stagger.Bar(35, 30)
         self.bar2 = stagger.Bar(40)
 
         #(x, y, r, speed = 1, initial = 0)
-        self.drive1 = stagger.Anchor(-20, -20, 10, 6, 0)
+        self.drive1 = stagger.Anchor(-20, y, 10, 6, 0)
         self.drive2 = stagger.Anchor(15, -22, 6, 3, 180)
         
         self.motionSystem = stagger.Two_Bar(self.drive1, self.drive2, self.bar1, self.bar2)
