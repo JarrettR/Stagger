@@ -36,6 +36,7 @@ class TestDatabase(unittest.TestCase):
         
     def tearDown(self):
         '''Delete database'''
+        self.db.conn.close()
         os.remove('testdb.db')
         
     def test_db_creation(self):

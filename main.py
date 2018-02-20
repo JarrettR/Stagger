@@ -16,9 +16,9 @@ class GeneratePaths(object):
                 system = self.create_system(y - 20)
                 self.save_database(self.motionSystem, system)
                 #data = self.load_database('outputs/test.db')
-                self.save_png('outputs/test{}.png'.format(x), system, 50)
+                self.save_png('outputs/test{}.png'.format(y), system, 50)
             except (ValueError, ZeroDivisionError) as e:
-                print('Could not calculate {}: {}'.format(x, e))
+                print('Could not calculate {}: {}'.format(y, e))
     
     
     def create_system(self, y):
