@@ -90,7 +90,7 @@ class StaggerTestSuite(unittest.TestCase):
         drive1 = stagger.Anchor(-20, -20, 10, speed1, 0)
         drive2 = stagger.Anchor(15, -22, 6, speed2, 180)
         
-        motionSystem = stagger.Two_Bar(drive1, drive2, bar1, bar2)
+        motionSystem = stagger.TwoBar(drive1, drive2, bar1, bar2)
         
         return motionSystem
         

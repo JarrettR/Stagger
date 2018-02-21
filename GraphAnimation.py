@@ -16,7 +16,7 @@ class GraphAnimation(object):
         self.drive1 = stagger.Anchor(-20, -20, 10, 6, 0)
         self.drive2 = stagger.Anchor(15, -22, 6, 3, 180)
         
-        self.motionSystem = stagger.Two_Bar(self.drive1, self.drive2, self.bar1, self.bar2)
+        self.motionSystem = stagger.TwoBar(self.drive1, self.drive2, self.bar1, self.bar2)
 
         #xlim, ylim, line1 style, weight, line2 style, weight
         self.init_graph((-50, 50), (-50, 50), 'b-', 8, 'g-', 8)

@@ -1,13 +1,15 @@
 __all__ = [
     'Anchor',
     'Bar',
-    'Motion_Study',
-    'Two_Bar',
+    'MotionStudy',
+    'TwoBar',
+    'Iterator',
     'Database'
 ]
 
 from .anchor import Anchor
 from .bar import Bar
-from .motion_study import Motion_Study
-from .two_bar import Two_Bar
+from .motionstudy import MotionStudy
+from .twobar import TwoBar
+from .iterator import Iterator
 from .database import Database

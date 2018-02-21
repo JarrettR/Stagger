@@ -27,10 +27,10 @@ class GeneratePaths(object):
         self.bar2 = stagger.Bar(40)
 
         #(x, y, r, speed = 1, initial = 0)
-        self.drive1 = stagger.Anchor(-20, y, 10, 6, 0)
+        self.drive1 = stagger.Anchor(y, -20, 10, 6, 0)
         self.drive2 = stagger.Anchor(15, -22, 6, 3, 180)
         
-        self.motionSystem = stagger.Two_Bar(self.drive1, self.drive2, self.bar1, self.bar2)
+        self.motionSystem = stagger.TwoBar(self.drive1, self.drive2, self.bar1, self.bar2)
 
         inputRange = list(map((lambda x: x * self.motionSystem.stepSize), range(0,360)))
         
