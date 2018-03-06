@@ -10,7 +10,7 @@ from . import MotionStudy
 
 class TwoBar(MotionStudy):
     def __init__(self, drive1, drive2, bar1, bar2):
-        self.sanity_check(drive1, drive2, bar1, bar2)
+        self.validate_physics(drive1, drive2, bar1, bar2)
         
         super().__init__(drive1, drive2, bar1, bar2)
     
@@ -28,7 +28,7 @@ class TwoBar(MotionStudy):
         if bar2:
             self.bar2 = bar2
         
-    def sanity_check(self, drive1, drive2, bar1, bar2):  
+    def validate_physics(self, drive1, drive2, bar1, bar2):  
         if (drive1.distance_angle_from(drive2.x, drive2.y)[0] + drive1.r + drive2.r) >= (bar1.joint + bar2.length):
             raise ValueError('Bars too short!')
         if ((drive1.distance_angle_from(drive2.x, drive2.y)[0] - drive1.r) + bar1.joint) < (bar2.length):

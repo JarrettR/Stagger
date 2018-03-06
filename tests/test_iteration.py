@@ -22,6 +22,18 @@ class TestIteration(unittest.TestCase):
         #self.iteratable
 
         assert False
+    def test_invalid_component_iterator(self):
+        '''Adding a non-existent component to the iterables list'''
+        
+        #Expect pass
+        self.iterableSystem.add_iterator(('drive1', 'x', -20, 20, 1))
+        #Expect pass
+        self.iterableSystem.add_iterator(('drive1', 'y', -20, 20, 1))
+        #Expect fail
+        self.iterableSystem.add_iterator(('drive3', 'y', -20, 20, 1))
+        #Expect fail
+        self.iterableSystem.add_iterator(('drive', 'y', -20, 20, 1))
+        assert False
 
     def test_iteration_count_recursion(self):
         '''Iterable recursively iterates (double layer)'''
@@ -29,7 +41,7 @@ class TestIteration(unittest.TestCase):
 
         assert False
 
-    def test_iteration_count_recursion(self):
+    def test_iteration_count_double_recursion(self):
         '''Iterable recursively iterates (triple layer)'''
         #self.iteratable
 
