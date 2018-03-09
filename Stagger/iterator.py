@@ -3,23 +3,22 @@ import itertools
 class Iterator(object):
     def __init__(self, system):
         self.system = system
-        self.i = 0
         self.iterables = []
-        self.iteratedList = "aaa"
+        self.maxIndex = []
+        self.currentIndex = []
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self.i < len(self.iteratedList):
-            params = self.iteratedList[self.i]
-            self.i = self.i + 1
-            print(params)
+        if self.decrement_pointer() == True:
+            parameters = self.calculate_parameters(self.currentIndex)
+            self.update_system(parameters)
             return self
         else:
             raise StopIteration()
             
-    #('drive1', 'x', -20, 20, 1))  
+    #parameters = ('drive1', 'x', -20, 20, 1)
     def add_iterator(self, parameters):
         if self.check_component_exists(parameters[0]):
             self.iterables.append(parameters)
@@ -27,29 +26,44 @@ class Iterator(object):
             raise ValueError('Component does not exist in system!')
             
     def bake(self):
-        line = []
-        listOut = []
         x = 0
         for line in self.iterables:
-            print(line)
-            print(line[0], line[1])
-            for value in range(line[2], line[3], line[4]):
-                print(value)
-                listOut.append((line[0], line[1], value, ))
-            x += 1
-        print(listOut)
-        print('----')
-        print(*listOut)
-        print('----')
-        #for out in itertools.product(*listOut):
-        #    print(out)
-        
+            steps = int((line[3] - line[2]) / line[4])
+            self.maxIndex.append(steps)
+        self.currentIndex = list(self.maxIndex)
         
     def check_component_exists(self, component):
         if component in self.system.get_members():
             return True
         else:
             return False
+        
+    def decrement_pointer(self):
+        for x in range(len(self.currentIndex), 0, -1):
+            if self.currentIndex[x - 1] > 0:
+                self.currentIndex[x - 1] -= 1
+                if x < len(self.currentIndex):
+                    self.currentIndex[x] = self.maxIndex[x]
+                break
+            elif x == 1:
+                return False
+        return True
+    
+    def calculate_parameters(self, values):
+        parameters = []
+        for index, item in enumerate(values):
+            min = self.iterables[index][2]
+            resolution = self.iterables[index][4]
+            value = (item * resolution) + min
+            
+            parameters.append((self.iterables[index][0], self.iterables[index][1], value, ))
+            
+        return parameters
+        
+        
+    def update_system(self, parameters):
+        for member in parameters:
+            self.system.set_value(*member)
     
     def create_parameter(self, parameter, min, max, resolution):
     

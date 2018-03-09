@@ -15,12 +15,13 @@ class GeneratePath(object):
                 # self.save_png('outputs/test{}.png'.format(y), system, 50)
             # except (ValueError, ZeroDivisionError) as e:
                 # print('Could not calculate {}: {}'.format(y, e))
-        try:
-            system = self.create_system(-20)
+        #try:
+        #    system = self.create_system(-20)
             #self.save_database(self.motionSystem, system)
             #self.save_png('outputs/test{}.png'.format(y), system, 50)
-        except (ValueError, ZeroDivisionError) as e:
-            print('Could not calculate {}: {}'.format(y, e))
+        #except (ValueError, ZeroDivisionError) as e:
+        #    print('Could not calculate {}: {}'.format(e, e))
+        system = self.create_system(-20)
     
     
     def create_system(self, x):
@@ -35,19 +36,20 @@ class GeneratePath(object):
         self.motionSystem = stagger.TwoBar(self.drive1, self.drive2, self.bar1, self.bar2)
 
         self.iterableSystem = stagger.Iterator(self.motionSystem)
-        self.iterableSystem.add_iterator(('drive1', 'x', -5, 5, 1))
+        self.iterableSystem.add_iterator(('drive1', 'x', -5, 2, 1))
         self.iterableSystem.add_iterator(('drive1', 'y', -5, 5, 1))
+        #self.iterableSystem.add_iterator(('drive1', 'r', -5, 5, 1))
         self.iterableSystem.bake()
         
         self.iterableSystem.print_iterables()
         
-        for x in self.iterableSystem:
-            x.print_parameter("")
-            
-        
-        inputRange = list(map((lambda x: x * self.motionSystem.stepSize), range(0,360)))
-        
-        return list(map(self.motionSystem.end_path, inputRange))
+        i = 0
+        for set in self.iterableSystem:
+            inputRange = list(map((lambda x: x * set.system.stepSize), range(0,360)))
+            #print(inputRange)
+            data = list(map(set.system.end_path, inputRange))
+            self.save_png('outputs/test{}.png'.format(i), data, 50)
+            i += 1
 
 
     def create_database(self, filename):

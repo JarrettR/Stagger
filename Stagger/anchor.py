@@ -24,6 +24,18 @@ class Anchor(object):
         y = (self.r * self.deg_to_y(angle)) + self.y
         
         return x, y
+             
+    def set_value(self, parameter, value):
+        if parameter == 'x':
+            self.x = value
+        elif parameter == 'y':
+            self.x = value
+        elif parameter == 'r':
+            self.x = value
+        elif parameter == 'speed':
+            self.x = value
+        else:
+            raise ValueError('Parameter does not exist!')
         
     def distance_angle_from(self, x, y):
         theta = self.xy_to_angle((self.x - x), (self.y - y))

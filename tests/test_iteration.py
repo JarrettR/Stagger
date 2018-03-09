@@ -37,12 +37,17 @@ class TestIteration(unittest.TestCase):
 
     def test_iteration_count_recursion(self):
         '''Iterable recursively iterates (double layer)'''
+        self.iterableSystem.add_iterator(('drive1', 'x', -5, 5, 1))
+        self.iterableSystem.add_iterator(('drive1', 'y', -5, 5, 1))
         #self.iteratable
 
         assert False
 
     def test_iteration_count_double_recursion(self):
         '''Iterable recursively iterates (triple layer)'''
+        self.iterableSystem.add_iterator(('drive1', 'x', -5, 5, 1))
+        self.iterableSystem.add_iterator(('drive1', 'y', -5, 5, 1))
+        self.iterableSystem.add_iterator(('drive1', 'r', -5, 5, 1))
         #self.iteratable
 
         assert False

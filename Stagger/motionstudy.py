@@ -24,7 +24,7 @@ class MotionStudy(abc.ABC):
         pass
         
     @abc.abstractmethod
-    def set_member(self):
+    def set_value(self):
         pass
         
     def set_speeds(self):
@@ -51,10 +51,16 @@ class MotionStudy(abc.ABC):
                 
         self.stepSize = self.totalFrames / self.resolution
 
-    def sides_to_angle(self, A, B, C):
-        #cosine law
-        out = np.arccos((A * A + B * B - C * C)/(2.0 * A * B))
-        return out
+    def sides_to_angle(self, a, b, c):
+        '''Cosine law: Given sides a, b, and c, this will return angle C'''
+        
+        if a + b > c:
+            raise ValueError('Cosine Lawbreaker! a + b must not be greater than c')
+        else:
+        
+            C = np.arccos((a * a + b * b - c * c)/(2.0 * a * b))
+            
+            return C
         
     def line_end(self, x, y, r, angle):
         x = x + np.cos(angle) * r

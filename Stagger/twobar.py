@@ -18,15 +18,17 @@ class TwoBar(MotionStudy):
     def get_members(self):
         return ['drive1', 'drive2', 'bar1', 'bar2']
         
-    def set_member(self, drive1=None, drive2=None, bar1=None, bar2=None):
-        if drive1:
-            self.drive1 = drive1
-        if drive2:
-            self.drive2 = drive2
-        if bar1:
-            self.bar1 = bar1
-        if bar2:
-            self.bar2 = bar2
+    def set_value(self, member, parameter, value):
+        if member == 'drive1':
+            self.drive1.set_value(parameter, value)
+        elif member == 'drive2':
+            self.drive2.set_value(parameter, value)
+        elif member == 'bar1':
+            self.bar1.set_value(parameter, value)
+        elif member == 'bar2':
+            self.bar2.set_value(parameter, value)
+        else:
+            raise ValueError('Member does not exist!')
         
     def validate_physics(self, drive1, drive2, bar1, bar2):  
         if (drive1.distance_angle_from(drive2.x, drive2.y)[0] + drive1.r + drive2.r) >= (bar1.joint + bar2.length):
