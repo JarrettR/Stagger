@@ -11,7 +11,9 @@ class Iterator(object):
 
     def __next__(self):
         if self.decrement_pointer() is True:
+            #print("Index: ", self.currentIndex)
             parameters = self.calculate_parameters(self.currentIndex)
+            #print("parameters: ", parameters)
             self.update_system(parameters)
             return self
         else:

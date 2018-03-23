@@ -35,8 +35,8 @@ class GeneratePath(object):
         self.motionSystem = stagger.TwoBar(self.drive1, self.drive2, self.bar1, self.bar2)
 
         self.iterableSystem = stagger.Iterator(self.motionSystem)
-        self.iterableSystem.add_iterator(('drive1', 'x', -5, 2, 1))
-        self.iterableSystem.add_iterator(('drive1', 'y', -5, 5, 1))
+        self.iterableSystem.add_iterator(('drive1', 'x', -25, 15, 2))
+        self.iterableSystem.add_iterator(('drive1', 'y', -25, 15, 2))
         #self.iterableSystem.add_iterator(('drive1', 'r', -5, 5, 1))
         self.iterableSystem.bake()
 
@@ -46,9 +46,12 @@ class GeneratePath(object):
         for set in self.iterableSystem:
             inputRange = list(map((lambda x: x * set.system.stepSize), range(0, 360)))
             #print(inputRange)
-            data = list(map(set.system.end_path, inputRange))
-            self.save_png('outputs/test{}.png'.format(i), data, 50)
-            i += 1
+            try:
+                i += 1
+                data = list(map(set.system.end_path, inputRange))
+                self.save_png('outputs/test{}.png'.format(i), data, 50)
+            except (ValueError, ZeroDivisionError) as e:
+                print('Could not calculate {}: {}'.format(i, e))
 
 
     def create_database(self, filename):

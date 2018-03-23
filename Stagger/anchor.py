@@ -35,11 +35,11 @@ class Anchor(object):
         if parameter == 'x':
             self.x = value
         elif parameter == 'y':
-            self.x = value
+            self.y = value
         elif parameter == 'r':
-            self.x = value
+            self.r = value
         elif parameter == 'speed':
-            self.x = value
+            self.speed = value
         else:
             raise ValueError('Parameter does not exist!')
 
@@ -82,6 +82,8 @@ class Anchor(object):
 
     @staticmethod
     def xy_to_angle(x, y):
+        if x == 0.0:
+            raise ValueError('Angle is invalid')
         return np.arctan(y / x)
 
     @staticmethod
