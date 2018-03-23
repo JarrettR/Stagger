@@ -20,16 +20,16 @@ class GeneratePath(object):
             #self.save_png('outputs/test{}.png'.format(y), system, 50)
         #except (ValueError, ZeroDivisionError) as e:
         #    print('Could not calculate {}: {}'.format(e, e))
-        self.create_system(-20)
+        self.create_system()
 
 
-    def create_system(self, x):
+    def create_system(self):
         #(length, joint = 0)
         self.bar1 = stagger.Bar(35, 30)
         self.bar2 = stagger.Bar(40)
 
         #(x, y, r, speed = 1, initial = 0)
-        self.drive1 = stagger.Anchor(x, -20, 10, 6, 0)
+        self.drive1 = stagger.Anchor(-20, -20, 10, 6, 0)
         self.drive2 = stagger.Anchor(15, -22, 6, 3, 180)
 
         self.motionSystem = stagger.TwoBar(self.drive1, self.drive2, self.bar1, self.bar2)
