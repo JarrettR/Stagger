@@ -50,8 +50,8 @@ class MotionStudy(abc.ABC):
     def sides_to_angle(a, b, c):
         '''Cosine law: Given sides a, b, and c, this will return angle C'''
 
-        if a + b > c:
-            raise ValueError('Cosine Lawbreaker! a + b must not be greater than c')
+        if a + b <= c:
+            raise ValueError('Cosine Lawbreaker! a + b must be greater than c')
         else:
 
             C = np.arccos((a * a + b * b - c * c)/(2.0 * a * b))

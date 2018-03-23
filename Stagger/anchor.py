@@ -16,6 +16,12 @@ class Anchor(object):
 
 
     def base_point(self, angle):
+        """returns base point of current object
+
+        The base point in this context is the point at which
+        the linkage attaches to the rotating driveshaft,
+        at the given angle.
+        """
         if self.speed < 0:
             angle = self.initial - angle
         else:
@@ -38,12 +44,23 @@ class Anchor(object):
             raise ValueError('Parameter does not exist!')
 
     def distance_angle_from(self, x, y):
+        """returns distance and angle from current object
+
+        Given an arbitrary set of coordinates,
+        will return distance from the current object
+        """
         theta = self.xy_to_angle((self.x - x), (self.y - y))
         distance = self.xy_to_hyp((x - self.x), (y - self.y))
 
         return distance, theta
 
     def base_point_distance(self, angle1, angle2, end):
+        """returns distance between two base points
+
+        Given the current object and a second object,
+        calculates the x/y distance between them, at
+        their respective angles.
+        """
         startPoint = self.base_point(angle1)
         endPoint = end.base_point(angle2)
 
